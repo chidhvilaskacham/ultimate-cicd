@@ -27,7 +27,7 @@ Execute the following command:
 ```sh
 java -jar target/spring-boot-web.jar
 ```
-Access the application at: [http://localhost:8080](http://localhost:8080)
+Access the application at: [http://localhost:8080](http://<ip-address>:8080)
 
 ## Run the Application with Docker (Recommended)
 ### Build the Docker Image
