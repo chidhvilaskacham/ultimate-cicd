@@ -10,8 +10,8 @@ This is a simple Spring Boot-based Java web application built using Maven. It fo
 
 ## Clone the Repository
 ```sh
-git clone https://github.com/iam-veeramalla/Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/sprint-boot-app
-cd java-maven-sonar-argocd-helm-k8s/sprint-boot-app
+git clone https://github.com/chidhvilaskacham/ultimate-cicd.git
+cd spring-boot-app
 ```
 
 ## Build the Application
