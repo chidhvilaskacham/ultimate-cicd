@@ -7,21 +7,20 @@
     <groupId>com.chidhvilas</groupId>
     <artifactId>spring-boot-demo</artifactId>
     <version>1.0</version>
-
     <name>spring-boot-demo</name>
     <url></url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version> <!-- Upgraded to latest 2.7.x -->
+        <version>3.0.0</version> <!-- Updated to the latest Spring Boot 3.x -->
         <relativePath/>
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source> <!-- Ensure Java 21 is used -->
+        <maven.compiler.target>21</maven.compiler.target> <!-- Ensure Java 21 is used -->
         <java.version>21</java.version>
     </properties>
 
@@ -55,15 +54,15 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.7.18</version> <!-- Ensures compatibility -->
+                <version>3.0.0</version> <!-- Updated to Spring Boot 3.x -->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version> <!-- Slight upgrade -->
+                <version>3.10.1</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>${java.version}</source> <!-- Using ${java.version} to ensure consistency -->
+                    <target>${java.version}</target> <!-- Using ${java.version} to ensure consistency -->
                 </configuration>
             </plugin>
         </plugins>
