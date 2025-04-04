@@ -58,7 +58,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version> <!-- Downgraded for stability -->
                 <configuration>
-                    <release>17</release>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>
