@@ -40,7 +40,7 @@ Navigate into the spring-boot-app directory:
 ```bash
 cd spring-boot-app
 ```
-Build the Application
+## Build the Application
 The application is built using Maven. Follow the steps below to build the application and generate the artifacts:
 
 Step 1: Clean and Package the Application
@@ -68,7 +68,7 @@ Open your browser and visit the following URL:
 http://localhost:8080
 This will load the application running locally on port 8080.
 
-Run the Application with Docker (Recommended)
+## Run the Application with Docker
 Running the application with Docker is the preferred method as it isolates the environment and ensures consistency across different systems.
 
 Step 1: Build the Docker Image
