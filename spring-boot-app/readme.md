@@ -27,7 +27,7 @@ Execute the following command:
 ```sh
 java -jar target/spring-boot-web.jar
 ```
-Access the application at: http://<ip-address>:8080
+Access the application at port 8080
 
 ## Run the Application with Docker (Recommended)
 ### Build the Docker Image
@@ -38,38 +38,11 @@ docker build -t ultimate-cicd-pipeline:v1 .
 ```sh
 docker run -d -p 8010:8080 -t ultimate-cicd-pipeline:v1
 ```
-Access the application at: http://<ip-address>:8010
+Access the application at port 8010
 
 ---
 
-# Next Steps: Configure a SonarQube Server Locally
-SonarQube is used for static code analysis. Follow these steps to set it up.
-
-## System Requirements
-### Software:
-- Java 17+ (Oracle JDK, OpenJDK, or AdoptOpenJDK)
-
-### Hardware Recommendations:
-- Minimum 2 GB RAM
-- 2 CPU cores
-
-## Install and Configure SonarQube
-```sh
-sudo apt update && sudo apt install unzip -y
-adduser sonarqube
-wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.4.1.88267.zip
-unzip sonarqube-10.4.1.88267.zip
-sudo mv sonarqube-10.4.1.88267 /opt/sonarqube
-sudo chown -R sonarqube:sonarqube /opt/sonarqube
-sudo chmod -R 775 /opt/sonarqube
-cd /opt/sonarqube/bin/linux-x86-64
-./sonar.sh start
-```
-
-Access the SonarQube Server at: http://<ip-address>:9000
-
----
 
 ## Hurray!! 🎉
-You have successfully set up and run the Spring Boot application and SonarQube server!
+You have successfully set up and run the Spring Boot application!
 
