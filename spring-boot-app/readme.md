@@ -44,8 +44,7 @@ cd spring-boot-app
 The application is built using Maven. Follow the steps below to build the application and generate the artifacts:
 
 **Step 1**: Clean and Package the Application
-
-To clean any previously compiled files and package the application into a JAR file, run:
+ - To clean any previously compiled files and package the application into a JAR file, run:
 
 ```bash
 mvn clean package
