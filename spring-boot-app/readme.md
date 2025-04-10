@@ -43,7 +43,8 @@ cd spring-boot-app
 ## Build the Application
 The application is built using Maven. Follow the steps below to build the application and generate the artifacts:
 
-Step 1: Clean and Package the Application
+**Step 1**: Clean and Package the Application
+
 To clean any previously compiled files and package the application into a JAR file, run:
 
 ```bash
@@ -71,7 +72,7 @@ This will load the application running locally on port 8080.
 ## Run the Application with Docker
 Running the application with Docker is the preferred method as it isolates the environment and ensures consistency across different systems.
 
-Step 1: Build the Docker Image
+**Step 1**: Build the Docker Image
 To build the Docker image for the application, use the following command:
 
 ```bash
@@ -81,7 +82,7 @@ docker build -t ultimate-cicd-pipeline:v1 .
 The . specifies the current directory as the build context.
 This command will generate a Docker image that contains the Spring Boot application.
 
-Step 2: Run the Docker Container
+**Step 2**: Run the Docker Container
 Now, run the Docker container with the following command:
 
 ```bash
@@ -90,7 +91,7 @@ docker run -d -p 8010:8080 -t ultimate-cicd-pipeline:v1
 -d runs the container in detached mode (in the background).
 -p 8010:8080 maps port 8080 of the container to port 8010 on your host machine.
 
-Step 3: Access the Application
+**Step 3**: Access the Application
 Once the container is running, open your browser and navigate to:
 
 http://localhost:8010
