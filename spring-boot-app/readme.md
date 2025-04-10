@@ -73,7 +73,7 @@ This will load the application running locally on port 8080.
 Running the application with Docker is the preferred method as it isolates the environment and ensures consistency across different systems.
 
 **Step 1**: Build the Docker Image
-To build the Docker image for the application, use the following command:
+ - To build the Docker image for the application, use the following command:
 
 ```bash
 docker build -t ultimate-cicd-pipeline:v1 .
@@ -83,7 +83,7 @@ The . specifies the current directory as the build context.
 This command will generate a Docker image that contains the Spring Boot application.
 
 **Step 2**: Run the Docker Container
-Now, run the Docker container with the following command:
+ - Now, run the Docker container with the following command:
 
 ```bash
 docker run -d -p 8010:8080 -t ultimate-cicd-pipeline:v1
@@ -92,7 +92,7 @@ docker run -d -p 8010:8080 -t ultimate-cicd-pipeline:v1
 -p 8010:8080 maps port 8080 of the container to port 8010 on your host machine.
 
 **Step 3**: Access the Application
-Once the container is running, open your browser and navigate to:
+ - Once the container is running, open your browser and navigate to:
 
 http://localhost:8010
 You should see the application running, just like in the local Java execution.
