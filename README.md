@@ -34,72 +34,135 @@ The pipeline automates the following processes:
 ### 1. Jenkins Setup (CI)
 
 1.  **Install Jenkins:**
+
     ```bash
     sudo apt update
     sudo apt install openjdk-11-jre
-    # ... (Jenkins installation commands from provided script) ...
+    curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+    echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] | https://pkg.jenkins.io/debian-stable binary/ | sudo tee  /etc/apt/sources.list.d/jenkins.list > /dev/null
+    sudo apt-get update
+    sudo apt install jenkins=2.426.3 -y
+    sudo systemctl enable jenkins
+    sudo systemctl start jenkins
     ```
-2.  **Access Jenkins:** `http://<ec2-instance-public-ip-address>:8080`.
+
+2.  **Access Jenkins:** `http://<instance-public-ip-address>:8080`.
+
 3.  **Retrieve Initial Admin Password:**
+
     ```bash
     sudo cat /var/lib/jenkins/secrets/initialAdminPassword
     ```
+
 4.  **Configure Jenkins Pipeline:**
-    * Create a new pipeline job.
-    * Configure to use `Jenkinsfile` from the provided repository.
-    * Update `Jenkinsfile` and `deployment.yml` with relevant credentials and URLs.
+    * Create a new pipeline job from the Jenkins UI.
+    * Configure to use `Jenkinsfile` from the provided repository: `https://github.com/chidhvilasKacham/ultimate-cicd.git`.
+    * Update `spring-boot-app/JenkinsFile` with your SonarQube URL, DockerHub ID and `spring-boot-app-manifests/deployment.yml` with your DockerHub ID and GitHub ID.
+
 5.  **Install Jenkins Plugins:**
-    * Docker Pipeline
-    * SonarQube Scanner
+    * Navigate to Jenkins > Manage Jenkins > Plugins > Available plugins.
+    * Install: `Docker Pipeline`, `SonarQube Scanner`.
+
 6.  **SonarQube Setup:**
+
     ```bash
+    sudo su -
     sudo adduser sonarqube
     sudo su - sonarqube
-    # ... (SonarQube installation commands from provided script) ...
+    wget [https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip](https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.4.0.54424.zip)
+    sudo apt install unzip
+    unzip sonarqube-9.4.0.54424.zip
+    chmod -R 755 /home/sonarqube/sonarqube-9.4.0.54424
+    chown -R sonarqube:sonarqube /home/sonarqube/sonarqube-9.4.0.54424
+    cd /home/sonarqube/sonarqube-9.4.0.54424/bin/linux-x86-64/
+    ./sonar.sh start
     ```
+
+    * Access SonarQube at `http://<instance-public-ip-address>:9000`.
+    * Login with `admin` / `admin` and change the password.
+
 7.  **Configure Jenkins Credentials:**
-    * SonarQube Token (ID: `sonarqube`)
-    * Docker Hub Credentials (ID: `docker-cred`)
-    * GitHub Personal Access Token (ID: `github`)
+    * Navigate to Jenkins > Manage Jenkins > Credentials > System > Global credentials > Add Credentials.
+    * **SonarQube Token:**
+        * Kind: `Secret text`.
+        * ID: `sonarqube`.
+        * Secret: SonarQube Token.
+    * **Docker Hub Credentials:**
+        * Kind: `Username with password`.
+        * ID: `docker-cred`.
+        * Username: Your Docker Hub username.
+        * Password: Your Docker Hub password.
+    * **GitHub Personal Access Token:**
+        * Kind: `Secret text`.
+        * ID: `github`.
+        * Secret: GitHub Personal Access Token.
+
 8.  **Install Docker:**
+
     ```bash
     sudo apt update
     sudo apt install docker.io
-    # ... (Docker installation commands from provided script) ...
+    sudo usermod -aG docker $USER
+    sudo usermod -aG docker jenkins
+    sudo systemctl restart docker
     ```
-9.  **Run the Jenkins Pipeline:** Trigger the pipeline to execute the CI process.
+
+9.  **Run the Jenkins Pipeline:** Trigger the pipeline from the Jenkins UI.
 
 ### 2. Argo CD Setup (CD)
 
 1.  **Minikube/Kubernetes Setup:**
+
     ```bash
-    # (Minikube setup commands from provided script)
+    New-Item -Path 'c:\' -Name 'minikube' -ItemType Directory -Force
+    Invoke-WebRequest -OutFile 'c:\minikube\minikube.exe' -Uri 'https://github.com/kubernetes/minikube/releases/latest/download/minikube-windows-amd64.exe' -UseBasicParsing
+    $oldPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::Machine)
+    if ($oldPath.Split(';') -inotcontains 'C:\minikube'){
+      [Environment]::SetEnvironmentVariable('Path', $('{0};C:\minikube' -f $oldPath), [EnvironmentVariableTarget]::Machine)
+    }
+    minikube start --driver=docker
     ```
-2.  **Install kubectl:**
+
+
+
+2.  **Install Argo CD Operator:**
+
     ```bash
-    # (kubectl installation commands from provided script)
+    curl -sL [https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.24.0/install.sh](https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.24.0/install.sh) | bash -s v0.24.0
+    kubectl create -f [https://operatorhub.io/install/argocd-operator.yaml](https://operatorhub.io/install/argocd-operator.yaml)
+    kubectl get csv -n operators
+    kubectl get pods -n operators
     ```
-3.  **Install Argo CD Operator:**
-    ```bash
-    # (Argo CD Operator installation commands from provided script)
-    ```
-4.  **Deploy Argo CD:**
-    * Create `argocd-basic.yml` and apply it.
-    * Expose Argo CD service using `NodePort`.
+
+3.  **Deploy Argo CD:**
+
+    * Create `argocd-basic.yml` using vim or nano
+
+        ```yaml
+        apiVersion: argoproj.io/v1alpha1
+        kind: ArgoCD
+        metadata:
+          name: example-argocd
+          labels:
+            example: basic
+        spec: {}
+        ```
+
+    * Apply the configuration: `kubectl apply -f argocd-basic.yml`.
+    * Edit Argo CD service: `kubectl edit svc example-argocd-server` and change `type: ClusterIP` to `type: NodePort`.
+    * Or You need to edit the ArgoCD custom resource example-argocd and look for `spec.server.service.type` to `NodePort` .
+
 5.  **Retrieve Argo CD Password:**
+
     ```bash
-    # (Commands to get Argo CD admin password from provided script)
+    kubectl get secret
+    kubectl edit secret example-argocd-cluster
+    echo -n <admin.password> | base64 -d
     ```
+
 6.  **Configure Argo CD:**
-    * Access Argo CD UI.
-    * Add the GitHub repository containing the application manifests.
-    * Create an Argo CD application to deploy the Java application.
+    * Access Argo CD UI using the `minikube service example-argocd-server` URL.
+    * Login with `admin` and the decoded password.
+    * Add the GitHub repository: `https://github.com/chidhvilaskacham/ultimat-cicd.git`.
+    * Create an Argo CD application to deploy the `spring-boot-app` using the `spring-boot-app-manifests` directory.
 
-## Pipeline Workflow
-
-1.  Developers commit code to the GitHub repository.
-2.  Jenkins triggers the pipeline.
-3.  Jenkins builds the application, runs SonarQube analysis, and creates a Docker image.
-4.  The Docker image is pushed to Docker Hub.
-5.  Argo CD detects changes in the Git repository and updates the Kubernetes deployment.
-6.  Kubernetes deploys the new application version.
